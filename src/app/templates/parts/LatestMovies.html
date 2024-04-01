@@ -1,0 +1,38 @@
+<div class="my-6 space-y-4">
+    <h1 class="text-2xl font-semibold">Latest Movies</h1>
+    <div id="LatestMoviesGrid" class="flex gap-6 overflow-x-auto mb-2">
+    </div>
+    <script>
+        const grid = $("#LatestMoviesGrid")
+        $.get({
+            url: "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/MAP.json",
+            success: (xhr) => {
+                grid.html("")
+                var counter = 0
+                for (let film of JSON.parse(xhr)) {
+                    if (counter == 10) {
+                        break;
+                    } else {
+                        const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/${film}`;
+                        $.get({
+                            url: url,
+                            success: (data) => {
+                                data = JSON.parse(data)
+                                const type = "film";
+                                grid.append(`{% include "parts/MediaCard.html" %}`)
+                                counter += 1;
+                            },
+                            error: (xhr) => {
+                                console.error(xhr)
+                            }
+                        })
+                    }
+                }
+                console.log("Completely added the latest movies!")
+            },
+            error: (xhr) => {
+                console.error(xhr)
+            }
+        })
+    </script>
+</div>
