@@ -86,27 +86,9 @@
                 $.get({
                     url: match,
                     success: (data) => {
+                        data = JSON.parse(data);
                         const url = match
-                        var type = url.split("https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/")[1]
-
-                        switch (type.split("/")[0]) {
-                            case "music": {
-                                if (type.includes("album") && type.includes("tracks")) {
-                                    type = "track"
-                                    break
-                                }
-                                else {
-                                    type = "album"
-                                    break
-                                }
-                            };
-                            case "films": {
-                                type = "film"
-                                break
-                            }
-                        }
-
-                        data = JSON.parse(data)
+                        const type = data.type
                         container.append(`{% include "parts/MediaCard.html" %}`)
                     },
                     error: (xhr) => {
