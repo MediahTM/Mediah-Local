@@ -23,11 +23,37 @@
                     data.uploadedAt = new Date(data.uploadedAt)
                     switch (type) {
                         case "film":
-                            FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`);
+                            let filmPromises = [];
+                            var extraData = ``;
+                            let promise = $.get({
+                                url: `https://api.themoviedb.org/3/search/movie?api_key=bfe60268dcb9f6352a6ff6ce40312265&query=${data.name}`,
+                                success: (search_mdb) => {
+                                    for (let result of search_mdb["results"]) {
+                                        if (data.name.toLowerCase().includes(result["original_title"].toString().toLowerCase())) {
+                                            console.log(result)
+                                            switch (result.adult) {
+                                                case true: {
+                                                    result.adult = "Adult Film"
+                                                }
+                                                case false: {
+                                                    result.adult = "Non-Adult Film"
+                                                }
+                                            }
+                                            extraData = `{% include 'parts/ExtraMovieData.html'  %}`
+                                            break;
+                                        }
+                                    }
+                                }
+                            })
+                            filmPromises.push(promise);
+
+                            $.when.apply($, filmPromises).done(() => {
+                                FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`);
+                            });
                             break;
                         case "album":
                             let tracksHTML = ``;
-                            let promises = [];
+                            let albumPromises = [];
                     
                             for (let i = 0; i < data.tracks.length; i++) {
                                 let track = data.tracks[i];
@@ -39,10 +65,10 @@
                                         tracksHTML += `<a href="{{ url_for('views.view') }}?url=${url}&type=track">${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</a>`;
                                     }
                                 });
-                                promises.push(promise);
+                                albumPromises.push(promise);
                             }
                     
-                            $.when.apply($, promises).done(() => {
+                            $.when.apply($, albumPromises).done(() => {
                                 FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`);
                             });
                     
