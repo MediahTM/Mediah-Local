@@ -1,0 +1,108 @@
+<div class="my-12">
+    <div id="SearchMediaGrid" class="flex gap-6 overflow-x-auto mb-2">
+        
+    </div>
+    <script>
+        const container = $("#SearchMediaGrid");
+        const query = location.search.split("?query=")[1];
+        const matches = [];
+
+        async function searchFilms() {
+            return new Promise((resolve, reject) => {
+                $.get({
+                    url: "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/MAP.json",
+                    success: (map) => {
+                        map = JSON.parse(map);
+                        for (let film of map) {
+                            if (film.split(".json")[0].toString().includes(query)) {
+                                matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/${film}`);
+                            }
+                        }
+                        resolve();
+                    },
+                    error: () => {
+                        reject();
+                        window.location = "{{ url_for('views.index') }}";
+                    }
+                });
+            });
+        }
+
+        async function searchAlbums() {
+            return new Promise((resolve, reject) => {
+                $.get({
+                    url: "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/MAP.json",
+                    success: (map) => {
+                        map = JSON.parse(map);
+                        const albumPromises = map.map((album) => {
+                            if (album.split(".json")[0].includes(query)) {
+                                matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${album}`)
+                            }
+                            return new Promise((resolveAlbum, rejectAlbum) => {
+                                $.get({
+                                    url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${album}`,
+                                    success: (details) => {
+                                        details = JSON.parse(details);
+                                        for (let track of details.tracks) {
+                                            if (track.split(".json")[0].includes(query)) {
+                                                matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`);
+                                            }
+                                        }
+                                        resolveAlbum();
+                                    },
+                                    error: () => {
+                                        rejectAlbum();
+                                        window.location = "{{ url_for('views.index') }}";
+                                    }
+                                });
+                            });
+                        });
+                        Promise.all(albumPromises).then(resolve);
+                    },
+                    error: () => {
+                        reject();
+                        window.location = "{{ url_for('views.index') }}";
+                    }
+                });
+            });
+        }
+
+        async function main() {
+            await Promise.all([searchFilms(), searchAlbums()]);
+            for (let match of matches) {
+                $.get({
+                    url: match,
+                    success: (data) => {
+                        const url = match
+                        var type = url.split("https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/")[1]
+
+                        console.log(type)
+                        
+                        switch (type.split("/")[0]) {
+                            case "music": {
+                                if (type.includes("album") && type.includes("tracks")) {
+                                    type = "track"
+                                }
+                                else {
+                                    type = "album"
+                                }
+                            }
+                            case "films": {
+                                type = "film"
+                            }
+                        }
+
+                        data = JSON.parse(data)
+                        console.log(data)
+                        container.append(`{% include "parts/MediaCard.html" %}`)
+                    },
+                    error: (xhr) => {
+                        console.error(xhr)
+                    }
+                })
+            }
+        }
+
+        main();
+    </script>
+</div>

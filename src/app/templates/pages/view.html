@@ -22,13 +22,13 @@
                     data = JSON.parse(data);
                     data.uploadedAt = new Date(data.uploadedAt)
                     switch (type) {
-                        case "film": {
-                            FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`)
-                        }
-                        case "album": {
+                        case "film":
+                            FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`);
+                            break;
+                        case "album":
                             let tracksHTML = ``;
                             let promises = [];
-
+                    
                             for (let i = 0; i < data.tracks.length; i++) {
                                 let track = data.tracks[i];
                                 const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`;
@@ -37,24 +37,20 @@
                                     success: (xhr) => {
                                         xhr = JSON.parse(xhr);
                                         tracksHTML += `<a href="{{ url_for('views.view') }}?url=${url}&type=track">${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</a>`;
-                                        console.log(`${i + 1}. ${xhr.name}`);
-                                        console.log(tracksHTML);
                                     }
                                 });
                                 promises.push(promise);
                             }
-
+                    
                             $.when.apply($, promises).done(() => {
-                                console.log(tracksHTML);
                                 FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`);
                             });
-
-                            break; 
-                        }
-                        case "track": {
+                    
+                            break;
+                        case "track":
                             FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`);
-                        }
-                    }
+                            break;
+                    }                    
                 },
                 error: (data) => {
                     window.location = "{{ url_for('views.index') }}"
