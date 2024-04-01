@@ -31,11 +31,12 @@
 
                             for (let i = 0; i < data.tracks.length; i++) {
                                 let track = data.tracks[i];
+                                const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`;
                                 let promise = $.get({
-                                    url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`,
+                                    url: url,
                                     success: (xhr) => {
                                         xhr = JSON.parse(xhr);
-                                        tracksHTML += `<p>${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</p>`;
+                                        tracksHTML += `<a href="{{ url_for('views.view') }}?url=${url}&type=track">${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</a>`;
                                         console.log(`${i + 1}. ${xhr.name}`);
                                         console.log(tracksHTML);
                                     }
@@ -49,6 +50,9 @@
                             });
 
                             break; 
+                        }
+                        case "track": {
+                            FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`);
                         }
                     }
                 },

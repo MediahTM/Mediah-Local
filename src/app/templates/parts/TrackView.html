@@ -13,19 +13,13 @@
                     <p>Uploaded By: '${data.uploadedBy}'</p>
                     <p>Uploaded At: ${data.uploadedAt}</p>
                     <p>Filesize: ${filesize(data.size)}</p>
-                    <p>Tracks: ${data.tracks.length}</p>
+                    <p>Playtime: ${data.playtime}</p>
                 </div>
                 <div class="flex gap-2">
                     <button class="h-11 text-sm animate-pulse sm:mt-0 mt-4 px-4 bg-zinc-700 rounded-full">Download</button>
                     <a href="${endpoint}" target="_blank" class="h-11 w-11 text-sm sm:mt-0 mt-4 bg-zinc-700 rounded-full flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                     </a>
-                </div>
-            </div>
-            <div>
-                <h2 class="text-xl font-semibold">Track List</h2>
-                <div class="my-2 border border-zinc-800/50 text-sm p-1 px-2 rounded-md divide-y divide-y-zinc-800">
-                    ${tracksHTML}
                 </div>
             </div>
         </div>
