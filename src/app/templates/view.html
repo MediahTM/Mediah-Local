@@ -16,19 +16,46 @@
             console.log(`Type: ${type}`)
 
             FileDetailsContainer.html("");
-            if (type == "film") {
-                $.get({
-                    url: endpoint,
-                    success: (data) => {
-                        data = JSON.parse(data);
-                        data.uploadedAt = new Date(data.uploadedAt)
-                        FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`)
-                    },
-                    error: (data) => {
-                        window.location = "{{ url_for('views.index') }}"
-                    } 
-                })
-            }
+            $.get({
+                url: endpoint,
+                success: (data) => {
+                    data = JSON.parse(data);
+                    data.uploadedAt = new Date(data.uploadedAt)
+                    switch (type) {
+                        case "film": {
+                            FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`)
+                        }
+                        case "album": {
+                            let tracksHTML = ``;
+                            let promises = [];
+
+                            for (let i = 0; i < data.tracks.length; i++) {
+                                let track = data.tracks[i];
+                                let promise = $.get({
+                                    url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`,
+                                    success: (xhr) => {
+                                        xhr = JSON.parse(xhr);
+                                        tracksHTML += `<p>${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</p>`;
+                                        console.log(`${i + 1}. ${xhr.name}`);
+                                        console.log(tracksHTML);
+                                    }
+                                });
+                                promises.push(promise);
+                            }
+
+                            $.when.apply($, promises).done(() => {
+                                console.log(tracksHTML);
+                                FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`);
+                            });
+
+                            break; 
+                        }
+                    }
+                },
+                error: (data) => {
+                    window.location = "{{ url_for('views.index') }}"
+                } 
+            })
         </script>
     </div>
 {% endblock %}

@@ -1,25 +1,25 @@
 <div class="my-6 space-y-4">
-    <h1 class="text-2xl font-semibold">Latest Movies</h1>
-    <div id="LatestMoviesGrid" class="flex gap-6 overflow-x-auto mb-2">
+    <h1 class="text-2xl font-semibold">Latest Albums</h1>
+    <div id="LatestAlbumsGrid" class="flex gap-6 overflow-x-auto mb-2">
     </div>
     <script>
-        const latestMovies = $("#LatestMoviesGrid")
+        const albumsGrid = $("#LatestAlbumsGrid");
         $.get({
-            url: "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/MAP.json",
+            url: "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/MAP.json",
             success: (xhr) => {
-                latestMovies.html("")
+                albumsGrid.html("")
                 var counter = 0
                 for (let film of JSON.parse(xhr)) {
                     if (counter == 10) {
                         break;
                     } else {
-                        const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/${film}`;
+                        const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${film}`;
                         $.get({
                             url: url,
                             success: (data) => {
                                 data = JSON.parse(data)
-                                const type = "film";
-                                latestMovies.append(`{% include "parts/MediaCard.html" %}`)
+                                const type = "album";
+                                albumsGrid.append(`{% include "parts/MediaCard.html" %}`)
                                 counter += 1;
                             },
                             error: (xhr) => {
@@ -28,7 +28,7 @@
                         })
                     }
                 }
-                console.log("Completely added the latest movies!")
+                console.log("Completely added the latest albums!")
             },
             error: (xhr) => {
                 console.error(xhr)
