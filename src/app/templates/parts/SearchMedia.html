@@ -4,7 +4,7 @@
     </div>
     <script>
         const container = $("#SearchMediaGrid");
-        const query = location.search.split("?query=")[1];
+        const query = location.search.split("?query=")[1].toLowerCase();
         const matches = [];
 
         async function searchFilms() {
@@ -35,7 +35,7 @@
                     success: (map) => {
                         map = JSON.parse(map);
                         const albumPromises = map.map((album) => {
-                            if (album.split(".json")[0].includes(query)) {
+                            if (album.split(".json")[0].toLowerCase().replace("-", " ").includes(query)) {
                                 matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${album}`)
                             }
                             return new Promise((resolveAlbum, rejectAlbum) => {
@@ -44,7 +44,7 @@
                                     success: (details) => {
                                         details = JSON.parse(details);
                                         for (let track of details.tracks) {
-                                            if (track.split(".json")[0].includes(query)) {
+                                            if (track.split(".json")[0].toLowerCase().replace("-", " ").includes(query)) {
                                                 matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`);
                                             }
                                         }
@@ -76,17 +76,22 @@
                         const url = match
                         var type = url.split("https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/")[1]
 
+                        console.log(type.split("/")[0])
+                        
                         switch (type.split("/")[0]) {
                             case "music": {
                                 if (type.includes("album") && type.includes("tracks")) {
                                     type = "track"
+                                    break
                                 }
                                 else {
                                     type = "album"
+                                    break
                                 }
-                            }
+                            };
                             case "films": {
                                 type = "film"
+                                break
                             }
                         }
 
