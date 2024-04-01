@@ -7,7 +7,7 @@ Install GIT if not installed, then paste this command into a console
 
 ```bash
 git clone "https://github.com/MediahTM/Mediah-Local.git" "media-local"
-cd "media-local"
+cd "media-local/src"
 pip install -r requirements.txt
 python web.py
 ```
