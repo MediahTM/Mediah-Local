@@ -6,7 +6,7 @@ The local Flask web ui to install files from Media-Downloads
 Install GIT if not installed, then paste this command into a console
 
 ```bash
-git clone "gh repo clone MediahTM/Mediah-Local" "media-local"
+git clone "https://github.com/MediahTM/Mediah-Local.git" "media-local"
 cd "media-local"
 pip install -r requirements.txt
 python web.py
