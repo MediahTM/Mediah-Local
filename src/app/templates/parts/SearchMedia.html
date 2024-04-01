@@ -76,8 +76,6 @@
                         const url = match
                         var type = url.split("https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/")[1]
 
-                        console.log(type)
-                        
                         switch (type.split("/")[0]) {
                             case "music": {
                                 if (type.includes("album") && type.includes("tracks")) {
@@ -93,7 +91,6 @@
                         }
 
                         data = JSON.parse(data)
-                        console.log(data)
                         container.append(`{% include "parts/MediaCard.html" %}`)
                     },
                     error: (xhr) => {
