@@ -13,10 +13,11 @@
             url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/MAP.json`,
             success: (mapper) => {
                 mapper = JSON.parse(mapper);
-                LatestMoviesGrid.html(``)
-                for (let item of mapper) {
+                LatestMoviesGrid.html(``);
+                for (let i = 0; i < 10 && i < mapper.length; i++) {
+                    const item = mapper[i];
                     const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/${item}`;
-                    const view_url = `films/${item}`
+                    const view_url = `films/${item}`;
                     
                     $.get({
                         url: url,
@@ -25,22 +26,22 @@
                             $.get({
                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
                                 success: (data) => {
-                                    LatestMoviesGrid.append(`{% include "parts/FilmCard.html" %}`)
+                                    LatestMoviesGrid.append(`{% include "parts/FilmCard.html" %}`);
                                 },
                                 error: (error) => {
-                                    alert(`Ran in to an issue fetching the tmdb data, create a GitHub issue!`)
+                                    alert(`Ran into an issue fetching the tmdb data, create a GitHub issue!`);
                                 }
-                            })
+                            });
                         },
                         error: (error) => {
-                            alert(`Ran in to an issue fetching the film index, create a GitHub issue!`)
+                            alert(`Ran into an issue fetching the film index, create a GitHub issue!`);
                         }
-                    })
+                    });
                 }
             },
             error: (error) => {
-                alert(`Ran in to an issue fetching the film mapper, create a GitHub issue!`)
+                alert(`Ran into an issue fetching the film mapper, create a GitHub issue!`);
             }
-        })
+        });
     </script>
 </div>
