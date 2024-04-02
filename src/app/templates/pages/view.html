@@ -23,7 +23,16 @@
                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
                                 success: (data) => {
                                     console.log(data)
-                                    FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
+                                    $.get({
+                                        url: `https://api.themoviedb.org/3/movie/${index.tmdb}/keywords?api_key={{tmdb_apikey}}`,
+                                        success: (keywords) => {
+                                            console.log(keywords)
+                                            FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
+                                        },
+                                        error: (error) => {
+                                            alert(`Ran in to an issue fetching the tmdb keyword data, create a GitHub issue!`)
+                                        }
+                                    })
                                 },
                                 error: (error) => {
                                     alert(`Ran in to an issue fetching the tmdb data, create a GitHub issue!`)
