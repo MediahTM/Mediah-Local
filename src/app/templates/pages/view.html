@@ -33,14 +33,12 @@
                             $.get({
                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
                                 success: (data) => {
-                                    console.log(data)
                                     $.get({
                                         url: `https://api.themoviedb.org/3/movie/${index.tmdb}/keywords?api_key={{tmdb_apikey}}`,
                                         success: (keywords) => {
                                             $.get({
                                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}/credits?api_key={{tmdb_apikey}}`,
                                                 success: (actors) => {
-                                                    console.log(actors)
                                                     FileDetailsContainer.html(``);
                                                     FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
                                                 },
@@ -63,6 +61,29 @@
                             alert(`Ran in to an issue fetching the film json data, create a GitHub issue!`)
                         }
                     })
+                }
+                case "album": {
+                    $.get({
+                        url: `${base_url}${url}`,
+                        success: (index) => {
+                            index = JSON.parse(index)
+                            $.get({
+                                url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
+                                success: (data) => {
+                                    data = data.response.page_data
+                                    console.log(data)
+                                    FileDetailsContainer.html(``);
+                                    FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`)
+                                },
+                                error: (error) => {
+                                    alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
+                                }
+                            })
+                        },
+                        error: (error) => {
+                            alert(`Ran in to an issue fetching the album json data, create a GitHub issue!`)
+                        }
+                    }) 
                 }
             }
         </script>

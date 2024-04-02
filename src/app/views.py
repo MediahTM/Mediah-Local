@@ -23,7 +23,7 @@ def search():
     return render_template("pages/search.html")
 
 @views.route("/api/json")
-@cache.cached(timeout=500)
+@cache.cached(timeout=2000)
 def get_json():
     url = request.args.get("url")
     response = requests.get(url)

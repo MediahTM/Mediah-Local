@@ -15,8 +15,11 @@
                 LatestAlbumsGrid.html(``);
                 for (let i = 0; i < 10 && i < mapper.length; i++) {
                     const item = mapper[i];
+                    const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`;
+                    const view_url = `/music/albums/${item}`;
+
                     $.get({
-                        url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`,
+                        url: url,
                         success: (index) => {
                             index = JSON.parse(index)
                             $.get({
