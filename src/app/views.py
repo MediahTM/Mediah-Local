@@ -22,12 +22,15 @@ def view():
 def search():
     return render_template("pages/search.html")
 
+def cache_key():
+    return request.url
+
 @views.route("/api/json")
-@cache.cached(timeout=2000)
+@cache.cached(timeout=3000, key_prefix=cache_key)
 def get_json():
     url = request.args.get("url")
     response = requests.get(url)
     if response.status_code in [200, 201]:
         return jsonify(response.json()), 200
     else:
-        return jsonify({"error": "Could not resolve the JSON!"})
+        return jsonify({"error": "Could not resolve the JSON!"}), 409

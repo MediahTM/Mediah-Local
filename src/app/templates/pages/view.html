@@ -14,6 +14,7 @@
             const url = location.search.split("?url=")[1].split("&")[0];
             const type = location.search.split("&type=")[1];
             const base_url = "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/";
+            const title_prefix = "Mediah Local"
 
             function formatTime(minutes) {
                 if (typeof minutes !== 'number' || isNaN(minutes)) {
@@ -24,12 +25,15 @@
                 return `${hours} ${remainingMinutes}`;
             }
 
+            console.log(`Type: ${type}`)
+            
             switch(type) {
                 case "film": {
                     $.get({
                         url: `${base_url}${url}`,
                         success: (index) => {
                             index = JSON.parse(index)
+                            index.uploadedAt = new Date(index.uploadedAt)
                             $.get({
                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
                                 success: (data) => {
@@ -39,8 +43,12 @@
                                             $.get({
                                                 url: `https://api.themoviedb.org/3/movie/${index.tmdb}/credits?api_key={{tmdb_apikey}}`,
                                                 success: (actors) => {
+                                                    document.title = `${title_prefix} - ${data.title}`
                                                     FileDetailsContainer.html(``);
-                                                    FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
+                                                    try {
+                                                        FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
+                                                    }
+                                                    catch {}
                                                 },
                                                 error: (error) => {
                                                     alert(`Ran in to an issue fetching the tmdb credits data, create a GitHub issue!`)
@@ -61,19 +69,24 @@
                             alert(`Ran in to an issue fetching the film json data, create a GitHub issue!`)
                         }
                     })
+                    break;
                 }
                 case "album": {
                     $.get({
                         url: `${base_url}${url}`,
                         success: (index) => {
                             index = JSON.parse(index)
+                            index.uploadedAt = new Date(index.uploadedAt)
                             $.get({
                                 url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
                                 success: (data) => {
                                     data = data.response.page_data
-                                    console.log(data)
+                                    document.title = `${title_prefix} - ${data.album.full_title}`
                                     FileDetailsContainer.html(``);
-                                    FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`)
+                                    try {
+                                        FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`)
+                                    }
+                                    catch {}
                                 },
                                 error: (error) => {
                                     alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
@@ -84,6 +97,33 @@
                             alert(`Ran in to an issue fetching the album json data, create a GitHub issue!`)
                         }
                     }) 
+                    break;
+                }
+                case "track": {
+                    $.get({
+                        url: `${base_url}${url}`,
+                        success: (index) => {
+                            index = JSON.parse(index)
+                            $.get({
+                                url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
+                                success: (data) => {
+                                    data = data.response.song
+                                    FileDetailsContainer.html(``);
+                                    try {
+                                        FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`)
+                                    }
+                                    catch {}
+                                },
+                                error: (error) => {
+                                    alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
+                                }
+                            })
+                        },
+                        error: (error) => {
+                            alert(`Ran in to an issue fetching the album json data, create a GitHub issue!`)
+                        }
+                    }) 
+                    break;
                 }
             }
         </script>

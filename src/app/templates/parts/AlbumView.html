@@ -1,5 +1,5 @@
-<div class="relative p-4 overflow-hidden rounded-xl">
-    <img loading="eager" src="${data.album.custom_header_image_url}" class="absolute z-[-10] brightness-[0.2] rounded-xl select-none sm:blur-sm w-full top-0 left-0 right-0 bottom-0" alt="">
+<div class="relative p-4 bg-zinc-700/20 overflow-hidden rounded-xl">
+    <img loading="eager" src="${data.album.custom_header_image_url}" class="absolute z-[-10] brightness-[0.2] rounded-xl select-none sm:blur-sm w-full top-0 left-0 right-0 bottom-0">
     <div class="flex w-full gap-6 items-center sm:flex-row flex-col">
         <a href="${data.album.cover_art_url}" class="sm:w-3/12" target="_blank">
             <img loading="lazy" src="${data.album.cover_art_url}" class="overflow-hidden border border-white/5 rounded-lg" alt="${data.album.full_title} Cover">
@@ -9,11 +9,14 @@
                 <div class="space-y-0.5">
                     <h1 class="text-3xl font-semibold">${data.album.name}</h1>
                     <h2 class="text-lg">${data.album.artist.name}</h2>
-                    <p class="text-sm text-zinc-400">Released ${data.album.release_date_for_display}</p>
+                    <p class="text-sm text-zinc-400 flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 -mt-[1px]"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                        Released ${data.album.release_date_for_display}
+                    </p>
                 </div>
                 <div>
                     <h2 class="text-lg">Overview</h2>
-                    <p class="text-zinc-400 clammped-text">${data.album.description_preview}</p>
+                    <p class="text-zinc-400 text-sm clammped-text">${data.album.description_preview}</p>
                     <style>
                         .clammped-text {
                             overflow: hidden;
@@ -24,7 +27,7 @@
                          }
                     </style>
                 </div>
-                <div class="flex justify-between sm:items-end items-center w-full">
+                <div class="flex justify-between items-start w-full">
                     <div class="text-sm text-left">
                         <p>Uploaded By: '${index.uploadedBy}'</p>
                         <p>Uploaded At: ${index.uploadedAt}</p>
@@ -32,8 +35,8 @@
                         <p>Available Tracks: ${index.tracks.length}</p>
                     </div>
                     <div class="flex gap-2">
-                        <button class="h-11 text-sm animate-pulse sm:mt-0 mt-4 px-4 bg-zinc-700 rounded-full" title="Download '${data.album.full_title}' • ${index.type}">Download</button>
-                        <a href="${data.album.url}" title="View '${data.album.full_title}' on Geniuis" target="_blank" class="h-11 w-11 text-sm sm:mt-0 mt-4 bg-zinc-700 rounded-full flex items-center justify-center">
+                        <button class="h-11 text-sm animate-pulse px-4 bg-zinc-700 rounded-full" title="Download '${data.album.full_title}' • ${index.type}">Download</button>
+                        <a href="${data.album.url}" title="View '${data.album.full_title}' on Geniuis" target="_blank" class="h-11 w-11 text-sm bg-zinc-700 rounded-full flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                         </a>
                     </div>
@@ -43,22 +46,24 @@
     </div>
 </div>
 <div class="my-6 sm:px-0 px-4">
-    <div class="flex sm:flex-row flex-col-reverse gap-6">
+    <div class="flex sm:flex-row flex-col gap-6">
         <div class="sm:w-4/6 flex flex-col">
             <div class="space-y-2 flex flex-col">
                 <h1 class="text-xl font-medium">Tracklist</h1>
                 <div class="text-sm divide-y divide-zinc-700">
                     ${data.album_appearances.map((track) => `
-                        <div class="flex items-center p-1 gap-2">
-                            <p>${track.track_number}.</p>
-                            <h1>${track.song.title}</h1>
-                            <span class="text-zinc-600">•</span>
-                            <p>
-                                ${track.song.featured_artists.map((featured_artist) => `
-                                    ${featured_artist.name}
-                                `).join('-')}
-                            </p>
-                        </div>
+                        ${index.tracks.map((index_track) => `
+                            <a href="{{ url_for('views.view') }}?url=/music/albums/tracks/${index_track.location}&type=track" class="flex items-start ${index_track.id == track.track_number ? 'text-white' : 'text-zinc-600 cursor-default'} p-1 gap-2">
+                                <p>${track.track_number}.</p>
+                                <h1>${track.song.title}</h1>
+                                <span>•</span>
+                                <p>
+                                    ${track.song.featured_artists.map((featured_artist) => `
+                                        ${featured_artist.name}
+                                    `).join('-')}
+                                </p>
+                            </a>
+                        `)}
                     `).join('')}
                 </div>
             </div>
