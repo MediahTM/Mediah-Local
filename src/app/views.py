@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
+from app.cache import cache
+import requests
 
 views = Blueprint("views", __name__)
 
@@ -19,3 +21,13 @@ def view():
 @views.route("/search")
 def search():
     return render_template("pages/search.html")
+
+@views.route("/api/json")
+@cache.cached(timeout=500)
+def get_json():
+    url = request.args.get("url")
+    response = requests.get(url)
+    if response.status_code in [200, 201]:
+        return jsonify(response.json()), 200
+    else:
+        return jsonify({"error": "Could not resolve the JSON!"})

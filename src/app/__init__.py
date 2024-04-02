@@ -1,8 +1,10 @@
 from app.views import views
+from app.cache import cache
 from flask import Flask
 import requests
 
 app = Flask(__name__, static_folder="public")
+cache.init_app(app)
 
 with open("version") as version:
     version = version.read()

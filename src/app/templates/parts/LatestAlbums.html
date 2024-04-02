@@ -1,0 +1,44 @@
+<div class="my-6 space-y-4">
+    <h1 class="text-2xl font-semibold flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-disc-3"><circle cx="12" cy="12" r="10"/><path d="M6 12c0-1.7.7-3.2 1.8-4.2"/><circle cx="12" cy="12" r="2"/><path d="M18 12c0 1.7-.7 3.2-1.8 4.2"/></svg>
+        Latest Albums
+    </h1>
+    <div id="LatestAlbumsGrid" class="flex gap-6 overflow-x-auto mb-2">
+        <div class="bg-zinc-800 media-card rounded-lg group overflow-hidden max-w-[200px] shrink-0 flex-col flex w-full"></div>
+    </div>
+    <script>
+        const LatestAlbumsGrid = $("#LatestAlbumsGrid");
+        $.get({
+            url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/MAP.json`,
+            success: (mapper) => {
+                mapper = JSON.parse(mapper);
+                LatestAlbumsGrid.html(``);
+                for (let i = 0; i < 10 && i < mapper.length; i++) {
+                    const item = mapper[i];
+                    $.get({
+                        url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`,
+                        success: (index) => {
+                            index = JSON.parse(index)
+                            $.get({
+                                url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
+                                success: (data) => {
+                                    data = data.response.page_data
+                                    LatestAlbumsGrid.append(`{% include "parts/AlbumCard.html" %}`)
+                                },
+                                error: (error) => {
+                                    alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
+                                }
+                            })
+                        },
+                        error: (error) => {
+                            alert(`Ran into an issue fetching the album details, create a GitHub issue!`);
+                        }
+                    })
+                }
+            },
+            error: (error) => {
+                alert(`Ran into an issue fetching the album mapper, create a GitHub issue!`);
+            }
+        });
+    </script>
+</div>
