@@ -59,24 +59,45 @@
         </div>
         <div class="sm:w-2/6 flex flex-col gap-4">
             <h1 class="text-xl font-medium pt-1">Details</h1>
-            <div class="space-y-0.5">
-                <h1 class="font-semibold">Status</h1>
+            <style>
+                .lucide {
+                    width: 18px;
+                    height: 18px;
+                }
+            </style>
+            <div class="space-y-1">
+                <h1 class="font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    Status
+                </h1>
                 <p class="text-sm">${data.status}</p>
             </div>
-            <div class="space-y-0.5">
-                <h1 class="font-semibold">Original Language</h1>
+            <div class="space-y-1">
+                <h1 class="font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+                    Original Language
+                </h1>
                 <p class="text-sm uppercase">${data.original_language}</p>
             </div>
-            <div class="space-y-0.5">
-                <h1 class="font-semibold">Budget</h1>
+            <div class="space-y-1">
+                <h1 class="font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-coins"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/></svg>
+                    Budget
+                </h1>
                 <p class="text-sm uppercase">$${data.budget}</p>
             </div>
-            <div class="space-y-0.5">
-                <h1 class="font-semibold">Revenue</h1>
+            <div class="space-y-1">
+                <h1 class="font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-coins"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/></svg>
+                    Revenue
+                </h1>
                 <p class="text-sm uppercase">$${data.revenue}</p>
             </div>
             <div class="space-y-1">
-                <h1 class="font-semibold">Keywords</h1>
+                <h1 class="font-semibold flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+                    Keywords
+                </h1>
                 <div class="flex flex-wrap gap-2">
                     ${keywords.keywords.map((keyword) => `<a target="_blank" href="https://www.themoviedb.org/keyword/${keyword.id}" class="rounded-full h-8 flex items-center text-sm px-2 border backdrop-blur-md border-zinc-700 hover:bg-zinc-700 transition-all select-none">${keyword.name}</a>`).join('')}
                 </div>
