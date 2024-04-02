@@ -58,8 +58,10 @@
                                 <a href="{{ url_for('views.view') }}?url=/music/albums/tracks/${index_track.location}&type=track" class="flex items-start text-white p-1 gap-2">
                                     <p>${track.track_number}.</p>
                                     <h1>${track.song.title}</h1>
-                                    <span>•</span>
-                                    <p>${track.song.featured_artists.map(featured_artist => featured_artist.name).join('-')}</p>
+                                    ${track.song.featured_artists && track.song.featured_artists.length > 0 ? `
+                                        <span>•</span>
+                                        <p>${track.song.featured_artists.map(featured_artist => featured_artist.name).join('-')}</p>
+                                    ` : ''}
                                 </a>
                             `;
                         } else {
@@ -67,8 +69,10 @@
                                 <div class="flex select-none items-start text-zinc-600 cursor-default p-1 gap-2">
                                     <p>${track.track_number}.</p>
                                     <h1>${track.song.title}</h1>
-                                    <span>•</span>
-                                    <p>${track.song.featured_artists.map(featured_artist => featured_artist.name).join('-')}</p>
+                                    ${track.song.featured_artists && track.song.featured_artists.length > 0 ? `
+                                        <span>•</span>
+                                        <p>${track.song.featured_artists.map(featured_artist => featured_artist.name).join('-')}</p>
+                                    ` : ''}
                                 </div>
                             `;
                         }

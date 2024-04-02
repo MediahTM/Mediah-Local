@@ -18,14 +18,16 @@
                         Released ${data.release_date_for_display}
                     </p>
                 </div>
-                <div class="space-y-1">
-                    <h2 class="text-lg">Featuring</h2>
-                    <div class="flex items-center text-sm gap-2">
-                        ${data.featured_artists.map((artist) => `
-                            <p class="rounded-full h-8 flex items-center text-sm px-2 border backdrop-blur-md border-zinc-700 hover:bg-zinc-700 transition-all select-none">${artist.name}</p>
-                        `).join('')}
+                ${data.featured_artists && data.featured_artists.length > 0 ? `
+                    <div class="space-y-1">
+                        <h2 class="text-lg">Featuring</h2>
+                        <div class="flex items-center text-sm gap-2">
+                            ${data.featured_artists.map((artist) => `
+                                <p class="rounded-full h-8 flex items-center text-sm px-2 border backdrop-blur-md border-zinc-700 hover:bg-zinc-700 transition-all select-none">${artist.name}</p>
+                            `).join('')}
+                        </div>
                     </div>
-                </div>
+                ` : ''}
                 <div class="space-y-1">
                     <h2 class="text-lg">Overview</h2>
                     <p class="text-zinc-400 text-sm clammped-text">${data.description_preview}</p>
