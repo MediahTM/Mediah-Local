@@ -108,6 +108,7 @@
                                 url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
                                 success: (data) => {
                                     data = data.response.song
+                                    document.title = `${title_prefix} - ${data.full_title}`
                                     FileDetailsContainer.html(``);
                                     try {
                                         FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`)

@@ -26,7 +26,7 @@ def cache_key():
     return request.url
 
 @views.route("/api/json")
-@cache.cached(timeout=3000, key_prefix=cache_key)
+@cache.cached(timeout=5000, key_prefix=cache_key)
 def get_json():
     url = request.args.get("url")
     response = requests.get(url)
