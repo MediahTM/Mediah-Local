@@ -1,0 +1,41 @@
+<div class="relative p-4 overflow-hidden rounded-xl">
+    <img loading="eager" src="https://image.tmdb.org/t/p/original/${data.backdrop_path}" class="absolute z-[-10] brightness-[0.2] rounded-xl select-none sm:blur-sm w-full top-0 left-0 right-0 bottom-0" alt="">
+    <div class="flex w-full gap-6 sm:flex-row flex-col items-center">
+        <a href="https://image.tmdb.org/t/p/original/${data.poster_path}" target="_blank" class="sm:w-1/6 w-3/6 shrink-0 rounded-lg overflow-hidden">
+            <img loading="lazy" src="https://image.tmdb.org/t/p/original/${data.poster_path}" alt="${data.original_title} Cover">
+        </a>
+        <div class="flex flex-col sm:text-left text-center justify-between flex-1 sm:gap-1 gap-6">
+            <div class="space-y-4">
+                <div class="flex flex-col gap-1">
+                    <h1 class="text-3xl">${data.original_title} <span class="text-zinc-400">(${data.release_date})</span></h1>
+                    <i class="text-zinc-400 my-1">${data.tagline}</i>
+                </div>
+                <div>
+                    <h2 class="text-lg">Overview</h2>
+                    <p class="text-zinc-400">${data.overview}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 my-4">
+                <p class="rounded-full h-8 flex items-center text-sm px-2 border border-zinc-700 hover:bg-zinc-700 backdrop-blur-md transition-all select-none uppercase">${data.original_language}</p>
+                ${data.genres.map((genre) => `<p class="rounded-full h-8 flex items-center text-sm px-2 border backdrop-blur-md border-zinc-700 hover:bg-zinc-700 transition-all select-none">${genre.name}</p>`).join('')}
+            </div>
+            <div class="flex sm:items-end items-center sm:flex-row flex-col justify-between">
+                <div class="text-sm">
+                    <p>Uploaded By: '${index.uploadedBy}'</p>
+                    <p>Uploaded At: ${index.uploadedAt}</p>
+                    <p>Filesize: ${filesize(index.size)}</p>
+                    <p>Parts: ${index.parts.length}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="h-11 text-sm animate-pulse sm:mt-0 mt-4 px-4 bg-zinc-700 rounded-full" title="Download '${data.original_title}' • ${index.type}">Download</button>
+                    <a href="https://www.themoviedb.org/movie/${data.id}" title="View '${data.original_title}' on TMDB" target="_blank" class="h-11 w-11 text-sm sm:mt-0 mt-4 bg-zinc-700 rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="my-4">
+    <h1>hi</h1>
+</div>

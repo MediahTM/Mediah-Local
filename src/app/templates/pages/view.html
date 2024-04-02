@@ -3,85 +3,39 @@
 {% block content %}
     <div class="px-4">
         <div class="mx-auto container w-full">
-            <div id="FileDetailsContainer">
+            <div id="FileDetailsContainer" class="my-12">
 
             </div>
         </div>
         <script>
-            const FileDetailsContainer = $("#FileDetailsContainer");
-            const type = location.search.split("&type=")[1].toString();
-            const endpoint = location.search.split("?url=")[1].split("&")[0].toString();
+            const FileDetailsContainer = $("#FileDetailsContainer"); 
+            const url = location.search.split("?url=")[1].split("&")[0];
+            const type = location.search.split("&type=")[1];
+            const base_url = "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/";
 
-            console.log(`Endpoint: ${endpoint}`)
-            console.log(`Type: ${type}`)
-
-            FileDetailsContainer.html("");
-            $.get({
-                url: endpoint,
-                success: (data) => {
-                    data = JSON.parse(data);
-                    data.uploadedAt = new Date(data.uploadedAt)
-                    switch (type) {
-                        case "film":
-                            let filmPromises = [];
-                            var extraData = ``;
-                            let promise = $.get({
-                                url: `https://api.themoviedb.org/3/search/movie?api_key=bfe60268dcb9f6352a6ff6ce40312265&query=${data.name}`,
-                                success: (search_mdb) => {
-                                    for (let result of search_mdb["results"]) {
-                                        if (data.name.toLowerCase().includes(result["original_title"].toString().toLowerCase())) {
-                                            console.log(result)
-                                            switch (result.adult) {
-                                                case true: {
-                                                    result.adult = "Adult Film"
-                                                }
-                                                case false: {
-                                                    result.adult = "Non-Adult Film"
-                                                }
-                                            }
-                                            extraData = `{% include 'parts/ExtraMovieData.html'  %}`
-                                            break;
-                                        }
-                                    }
+            switch(type) {
+                case "film": {
+                    $.get({
+                        url: `${base_url}${url}`,
+                        success: (index) => {
+                            index = JSON.parse(index)
+                            $.get({
+                                url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
+                                success: (data) => {
+                                    console.log(data)
+                                    FileDetailsContainer.append(`{% include "parts/FilmView.html" %}`)
+                                },
+                                error: (error) => {
+                                    alert(`Ran in to an issue fetching the tmdb data, create a GitHub issue!`)
                                 }
                             })
-                            filmPromises.push(promise);
-
-                            $.when.apply($, filmPromises).done(() => {
-                                FileDetailsContainer.append(`{% include "parts/MovieView.html" %}`);
-                            });
-                            break;
-                        case "album":
-                            let tracksHTML = ``;
-                            let albumPromises = [];
-                    
-                            for (let i = 0; i < data.tracks.length; i++) {
-                                let track = data.tracks[i];
-                                const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track}`;
-                                let promise = $.get({
-                                    url: url,
-                                    success: (xhr) => {
-                                        xhr = JSON.parse(xhr);
-                                        tracksHTML += `<a href="{{ url_for('views.view') }}?url=${url}&type=track">${i + 1}. ${xhr.name} <span class="text-zinc-600">•</span> ${xhr.playtime}</a>`;
-                                    }
-                                });
-                                albumPromises.push(promise);
-                            }
-                    
-                            $.when.apply($, albumPromises).done(() => {
-                                FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`);
-                            });
-                    
-                            break;
-                        case "track":
-                            FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`);
-                            break;
-                    }                    
-                },
-                error: (data) => {
-                    window.location = "{{ url_for('views.index') }}"
-                } 
-            })
+                        },
+                        error: (error) => {
+                            alert(`Ran in to an issue fetching the film json data, create a GitHub issue!`)
+                        }
+                    })
+                }
+            }
         </script>
     </div>
 {% endblock %}
