@@ -1,0 +1,170 @@
+<div class="my-6 space-y-8">
+    <div class="space-y-4 my-4">
+        <h1 class="text-2xl font-semibold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-film"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
+            Film Matches
+        </h1>
+        <div id="FoundFilmsGrid" class="flex gap-6 overflow-x-auto mb-2">
+            {% include "parts/LoadingSpinner.html" %}
+        </div>
+    </div>
+    <div class="space-y-4 my-4">
+        <h1 class="text-2xl font-semibold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg>
+            Album Matches
+        </h1>
+        <div id="FoundAlbumsGrid" class="flex gap-6 overflow-x-auto mb-2">
+            {% include "parts/LoadingSpinner.html" %}
+        </div>
+    </div>
+    <div class="space-y-4 my-4">
+        <h1 class="text-2xl font-semibold flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-disc"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/></svg>
+            Tracks
+        </h1>
+        <div id="FoundTracksGrid" class="flex gap-6 overflow-x-auto mb-2">
+            {% include "parts/LoadingSpinner.html" %}
+        </div>
+    </div>
+    <script>
+        const query = decodeURIComponent(location.search.split("?query=")[1]).replace(/\+/g, " ").replace(/\-/g, " ").toLocaleLowerCase();
+
+        document.title = `Mediah Local - Search results for '${query}'`
+
+        const matches = [];
+
+        const filmGrid = $("#FoundFilmsGrid")
+        const albumGrid = $("#FoundAlbumsGrid")
+        const tracksGrid = $("#FoundTracksGrid")
+
+        function FileNameFix(name) {
+            return name.split(".json")[0].toLowerCase().replace(/\-/g, " ");
+        }
+
+        const filmPromise = new Promise((resolve, reject) => {
+            $.get({
+                url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/MAP.json`,
+                success: (mapper) => {
+                    mapper = JSON.parse(mapper);
+                    for (let item of mapper) {
+                        let name = FileNameFix(item);
+                        if (name.includes(query)) {
+                            matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/films/${item}`);
+                        }
+                    }
+                    resolve();
+                },
+                error: (error) => {
+                    console.error("Ran into an issue fetching the film mapper, create a GitHub issue!", error);
+                    reject(error);
+                }
+            });
+        });
+
+        const albumPromise = new Promise((resolve, reject) => {
+            $.get({
+                url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/MAP.json`,
+                success: (mapper) => {
+                    mapper = JSON.parse(mapper);
+                    const albumPromises = [];
+                    for (let item of mapper) {
+                        let name = FileNameFix(item);
+                        if (name.includes(query)) {
+                            matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`);
+                        }
+                        const albumPromise = new Promise((resolveAlbum, rejectAlbum) => {
+                            $.get({
+                                url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`,
+                                success: (album) => {
+                                    album = JSON.parse(album);
+                                    for (let track of album.tracks) {
+                                        let trackName = FileNameFix(track.location);
+                                        if (trackName.includes(query)) {
+                                            matches.push(`https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/tracks/${track.location}`);
+                                        }
+                                    }
+                                    resolveAlbum();
+                                },
+                                error: (error) => {
+                                    console.error("Ran into an issue fetching the album mapper, create a GitHub issue!", error);
+                                    rejectAlbum(error);
+                                }
+                            });
+                        });
+                        albumPromises.push(albumPromise);
+                    }
+                    Promise.all(albumPromises).then(resolve).catch(reject);
+                },
+                error: (error) => {
+                    console.error("Ran into an issue fetching the album mapper, create a GitHub issue!", error);
+                    reject(error);
+                }
+            });
+        });
+
+        Promise.all([filmPromise, albumPromise])
+            .then(() => {
+                filmGrid.html(``)
+                albumGrid.html(``)
+                tracksGrid.html(``)
+                for (let match of matches) {
+                    $.get({
+                        url: match,
+                        success: (index) => {
+                            index = JSON.parse(index);
+                            const type = index.type
+                            const view_url = `${match.replace("https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/", "")}`;
+
+                            switch (type) {
+                                case "film": {
+                                    $.get({
+                                        url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
+                                        success: (data) => {
+                                            filmGrid.append(`{% include "parts/FilmCard.html" %}`);
+                                        },
+                                        error: (error) => {
+                                            alert(`Ran into an issue fetching the tmdb data, create a GitHub issue!`);
+                                        }
+                                    });
+                                    break;
+                                }
+                                case "album": {
+                                    $.get({
+                                        url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
+                                        success: (data) => {
+                                            data = data.response.page_data
+                                            albumGrid.append(`{% include "parts/AlbumCard.html" %}`)
+                                        },
+                                        error: (error) => {
+                                            alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
+                                        }
+                                    })
+                                    break;
+                                }
+                                case "track": {
+                                    $.get({
+                                        url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
+                                        success: (data) => {
+                                            data = data.response.song
+                                            console.log(data)
+                                            tracksGrid.append(`{% include "parts/TrackCard.html" %}`)
+                                        },
+                                        error: (error) => {
+                                            alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);
+                                        }
+                                    })
+                                    break;
+                                }
+                            }
+                        },
+                        error: (error) => {
+                            console.error("Ran into an issue fetching the type of data, create a GitHub issue!", error);
+                        }
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Error occurred during fetching:", error);
+            });
+    </script>
+</div>
