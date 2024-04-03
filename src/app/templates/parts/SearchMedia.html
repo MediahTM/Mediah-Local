@@ -1,27 +1,27 @@
 <div class="my-6 space-y-8">
     <h1 class="text-3xl">Search results for '<span id="query" class="font-semibold"></span>'</h1>
-    <div class="space-y-4 my-4">
+    <div style="display: none;" id="films" class="space-y-4 my-4">
         <h1 class="text-2xl font-semibold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-film"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
-            Film Matches
+            Film(s)
         </h1>
         <div id="FoundFilmsGrid" class="flex gap-6 overflow-x-auto mb-2">
             {% include "parts/LoadingSpinner.html" %}
         </div>
     </div>
-    <div class="space-y-4 my-4">
+    <div style="display: none;" id="albums" class="space-y-4 my-4">
         <h1 class="text-2xl font-semibold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg>
-            Album Matches
+            Album(s)
         </h1>
         <div id="FoundAlbumsGrid" class="flex gap-6 overflow-x-auto mb-2">
             {% include "parts/LoadingSpinner.html" %}
         </div>
     </div>
-    <div class="space-y-4 my-4">
+    <div style="display: none;" id="tracks" class="space-y-4 my-4">
         <h1 class="text-2xl font-semibold flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-disc"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/></svg>
-            Tracks
+            Track(s)
         </h1>
         <div id="FoundTracksGrid" class="flex gap-6 overflow-x-auto mb-2">
             {% include "parts/LoadingSpinner.html" %}
@@ -119,6 +119,7 @@
 
                             switch (type) {
                                 case "film": {
+                                    $("#films").show()
                                     $.get({
                                         url: `https://api.themoviedb.org/3/movie/${index.tmdb}?api_key={{tmdb_apikey}}`,
                                         success: (data) => {
@@ -131,6 +132,7 @@
                                     break;
                                 }
                                 case "album": {
+                                    $("#albums").show()
                                     $.get({
                                         url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
                                         success: (data) => {
@@ -144,6 +146,7 @@
                                     break;
                                 }
                                 case "track": {
+                                    $("#tracks").show()
                                     $.get({
                                         url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
                                         success: (data) => {

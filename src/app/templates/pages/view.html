@@ -10,7 +10,7 @@
         <script>
             const FileDetailsContainer = $("#FileDetailsContainer"); 
             const url = location.search.split("?url=")[1].split("&")[0];
-            const type = location.search.split("&type=")[1];
+            const type = location.search.split("&type=")[1].split("&")[0];
             const base_url = "https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/";
             const title_prefix = "Mediah Local"
 
@@ -113,6 +113,9 @@
                                     FileDetailsContainer.html(``);
                                     var favicon = $("#favicon")
                                     favicon.attr("href", data.header_image_url) 
+                                    console.log(data)
+                                    const album = location.search.split("&type=")[1].split("&album=")[1];
+                                    console.log(album)
                                     try {
                                         FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`)
                                     }

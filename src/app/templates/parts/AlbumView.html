@@ -16,7 +16,9 @@
                 </div>
                 <div>
                     <h2 class="text-lg">Overview</h2>
-                    <p class="text-zinc-400 text-sm clammped-text">${data.album.description_preview}</p>
+                    <div class="p-2 bg-zinc-700/30 backdrop-blur-sm rounded-lg">
+                        <p ReadMore class="text-zinc-400 cursor-pointer text-sm clammped-text">${data.album.description_preview}</p>
+                    </div>
                     <style>
                         .clammped-text {
                             overflow: hidden;
@@ -28,7 +30,7 @@
                     </style>
                 </div>
                 <div class="flex justify-between items-start w-full">
-                    <div class="text-sm text-left">
+                    <div class="text-xs text-left">
                         <p>Uploaded By: '${index.uploadedBy}'</p>
                         <p>Uploaded At: ${index.uploadedAt}</p>
                         <p>Filesize: ${filesize(index.size)}</p>
@@ -72,7 +74,7 @@
                         const index_track = index.tracks.find((index_track) => index_track.id == track.track_number);
                         if (index_track) {
                             return `
-                                <a href="{{ url_for('views.view') }}?url=/music/albums/tracks/${index_track.location}&type=track" class="flex items-start text-white p-1 gap-2">
+                                <a href="{{ url_for('views.view') }}?url=/music/albums/tracks/${index_track.location}&type=track&album=${url}" class="flex items-start text-white p-1 gap-2">
                                     <p>${track.track_number}.</p>
                                     <h1>${track.song.title}</h1>
                                     ${track.song.featured_artists && track.song.featured_artists.length > 0 ? `
