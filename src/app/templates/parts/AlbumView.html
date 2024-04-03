@@ -14,10 +14,14 @@
                         Released ${data.album.release_date_for_display}
                     </p>
                 </div>
-                <div>
+                <div class="space-y-1.5">
                     <h2 class="text-lg">Overview</h2>
                     <div class="p-2 bg-zinc-700/30 backdrop-blur-sm rounded-lg">
-                        <p ReadMore class="text-zinc-400 cursor-pointer text-sm clammped-text">${data.album.description_preview}</p>
+                        ${data.album.description_preview ? `
+                            <p ReadMore class="text-zinc-400 cursor-pointer text-sm clammped-text">${data.album.description_preview}</p>
+                        `:`
+                            <p class="text-zinc-400 cursor-pointer text-sm clammped-text">No overview provided</p>
+                        `}
                     </div>
                     <style>
                         .clammped-text {
@@ -31,15 +35,15 @@
                 </div>
                 <div class="flex justify-between items-start w-full">
                     <div class="text-xs text-left">
-                        <p>Uploaded By: '${index.uploadedBy}'</p>
                         <p>Uploaded At: ${index.uploadedAt}</p>
-                        <p>Filesize: ${filesize(index.size)}</p>
+                        <p>Uploaded By: '${index.uploadedBy}'</p>
                         <p>Available Tracks: ${index.tracks.length}</p>
+                        <p>Filesize: ${filesize(index.size)}</p>
                     </div>
                     <div class="flex gap-2">
                         <button class="h-11 text-sm animate-pulse px-4 bg-zinc-700 rounded-full" title="Download '${data.album.full_title}' • ${index.type}">Download</button>
                         <div id="ReadMoreOverview" style="display: none;" class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 p-4">
-                            <div class="sm:w-4/6 flex h-fit max-h-[100%] bg-zinc-700/50 backdrop-blur-xl p-4 rounded-xl mx-auto">
+                            <div class="sm:w-4/6 flex flex-col h-fit max-h-[100%] bg-zinc-700/50 backdrop-blur-xl p-4 rounded-xl mx-auto">
                                 <div class="space-y-2 flex flex-col">
                                     <div class="flex items-start justify-between">
                                         <div>

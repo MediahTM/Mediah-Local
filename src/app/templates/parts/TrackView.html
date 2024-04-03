@@ -1,6 +1,6 @@
 ${album ? `
     <div class="mb-4">
-        <a href="{{ url_for('views.view') }}?url=${album}&type=album" class="h-11 px-4 w-fit text-sm bg-zinc-700/50 rounded-full flex items-center gap-2">
+        <a href="{{ url_for('views.view') }}?url=${album}&type=album" class="h-10 px-3 w-fit text-sm bg-zinc-700/50 rounded-full flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mt-[1px]"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             Goto Album
         </a>
@@ -37,10 +37,14 @@ ${album ? `
                     </div>
                 ` : ''}
                 <div class="space-y-3">
-                    <div class="space-y-2">
+                    <div class="space-y-1.5">
                         <h2 class="text-lg">Overview</h2>
                         <div class="p-2 bg-zinc-700/30 backdrop-blur-sm rounded-lg">
-                            <p ReadMore class="text-zinc-400 cursor-pointer text-sm clammped-text">${data.description_preview}</p>
+                            ${data.description_preview ? `
+                                <p ReadMore class="text-zinc-400 cursor-pointer text-sm clammped-text">${data.description_preview}</p>
+                            `:`
+                                <p class="text-zinc-400 cursor-pointer text-sm clammped-text">No overview provided</p>
+                            `}
                         </div>
                         <style>
                             .clammped-text {
@@ -52,25 +56,27 @@ ${album ? `
                              }
                         </style>
                     </div>
-                    <div class="flex items-center justify-end">
-                        <div id="ReadMoreOverview" style="display: none;" class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 p-4">
-                            <div class="sm:w-4/6 flex h-fit max-h-[100%] bg-zinc-700/50 backdrop-blur-xl p-4 rounded-xl mx-auto">
-                                <div class="space-y-2 flex flex-col">
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <h1 class="text-2xl">Overview</h1>
-                                            <p class="text-sm">${data.full_title}</p>
+                    ${data.description_preview ? `
+                        <div class="flex items-center justify-end">
+                            <div id="ReadMoreOverview" style="display: none;" class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 p-4">
+                                <div class="sm:w-4/6 flex flex-col h-fit max-h-[100%] bg-zinc-700/50 backdrop-blur-xl p-4 rounded-xl mx-auto">
+                                    <div class="space-y-2 flex flex-col">
+                                        <div class="flex items-start justify-between">
+                                            <div>
+                                                <h1 class="text-2xl">Overview</h1>
+                                                <p class="text-sm">${data.full_title}</p>
+                                            </div>
+                                            <button ReadMore>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                            </button>
                                         </div>
-                                        <button ReadMore>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                                        </button>
+                                        <p class="text-zinc-400 flex flex-col pr-2 overflow-y-auto">${data.description_preview}</p>
                                     </div>
-                                    <p class="text-zinc-400 flex flex-col pr-2 overflow-y-auto">${data.description_preview}</p>
                                 </div>
                             </div>
+                            <button ReadMore class="h-9 flex items-center text-xs px-3 border-zinc-700 hover:bg-zinc-700 transition-all border rounded-full">More Details</button>
                         </div>
-                        <button ReadMore class="h-9 flex items-center text-xs px-3 border-zinc-700 hover:bg-zinc-700 transition-all border rounded-full">More Details</button>
-                    </div>
+                    `:``}
                 </div>
             </div>
         </div>
