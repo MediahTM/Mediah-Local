@@ -10,6 +10,9 @@ def globals():
         "tmdb_apikey": "bfe60268dcb9f6352a6ff6ce40312265" # This can be left public!
     }
 
+def cache_key():
+    return request.url
+
 @views.route("/")
 def index():
     return render_template("pages/index.html")
@@ -21,9 +24,6 @@ def view():
 @views.route("/search")
 def search():
     return render_template("pages/search.html")
-
-def cache_key():
-    return request.url
 
 @views.route("/api/json")
 @cache.cached(timeout=1000, key_prefix=cache_key)
