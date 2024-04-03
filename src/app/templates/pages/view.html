@@ -85,6 +85,9 @@
                                         FileDetailsContainer.append(`{% include "parts/AlbumView.html" %}`)
                                     }
                                     catch {}
+                                    $("[ReadMore]").click(() => {
+                                        $("#ReadMoreOverview").toggle();
+                                    })
                                 },
                                 error: (error) => {
                                     alert(`Ran into an issue fetching the genius details, create a GitHub issue!`);

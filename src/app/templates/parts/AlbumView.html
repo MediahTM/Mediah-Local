@@ -36,6 +36,23 @@
                     </div>
                     <div class="flex gap-2">
                         <button class="h-11 text-sm animate-pulse px-4 bg-zinc-700 rounded-full" title="Download '${data.album.full_title}' • ${index.type}">Download</button>
+                        <div id="ReadMoreOverview" style="display: none;" class="absolute flex items-center justify-center top-0 left-0 right-0 bottom-0 p-4">
+                            <div class="sm:w-4/6 flex h-fit max-h-[100%] bg-zinc-700/50 backdrop-blur-xl p-4 rounded-xl mx-auto">
+                                <div class="space-y-2 flex flex-col">
+                                    <div class="flex items-start justify-between">
+                                        <div>
+                                            <h1 class="text-2xl">Overview</h1>
+                                            <p class="text-sm">${data.album.name_with_artist}</p>
+                                        </div>
+                                        <button ReadMore>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                        </button>
+                                    </div>
+                                    <p class="text-zinc-400 flex flex-col pr-2 overflow-y-auto">${data.album.description_preview}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button ReadMore class="h-11 flex items-center text-sm px-4 border-zinc-700 hover:bg-zinc-700 transition-all border rounded-full">More Details</button>
                         <a href="${data.album.url}" title="View '${data.album.full_title}' on Geniuis" target="_blank" class="h-11 w-11 text-sm bg-zinc-700 rounded-full flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
                         </a>
