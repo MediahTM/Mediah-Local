@@ -4,7 +4,7 @@
         Latest Movies
     </h1>
     <div id="LatestMoviesGrid" class="flex gap-6 overflow-x-auto mb-2">
-        <div class="bg-zinc-800 media-card rounded-lg group overflow-hidden max-w-[200px] shrink-0 flex-col flex w-full"></div>
+        {% include "parts/LoadingSpinner.html" %}
     </div>
     <script>
         const LatestMoviesGrid = $("#LatestMoviesGrid");

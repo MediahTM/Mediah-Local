@@ -4,7 +4,7 @@
         Latest Albums
     </h1>
     <div id="LatestAlbumsGrid" class="flex gap-6 overflow-x-auto mb-2">
-        <div class="bg-zinc-800 media-card rounded-lg group overflow-hidden max-w-[200px] shrink-0 flex-col flex w-full"></div>
+        {% include "parts/LoadingSpinner.html" %}
     </div>
     <script>
         const LatestAlbumsGrid = $("#LatestAlbumsGrid");
@@ -12,7 +12,6 @@
             url: `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/MAP.json`,
             success: (mapper) => {
                 mapper = JSON.parse(mapper);
-                LatestAlbumsGrid.html(``);
                 for (let i = 0; i < 10 && i < mapper.length; i++) {
                     const item = mapper[i];
                     const url = `https://raw.githubusercontent.com/MediahTM/Mediah-Downloads/main/downloads/music/albums/${item}`;
@@ -22,6 +21,7 @@
                         url: url,
                         success: (index) => {
                             index = JSON.parse(index)
+                            LatestAlbumsGrid.html(``);
                             $.get({
                                 url: `{{ url_for('views.get_json') }}?url=${index.genius}`,
                                 success: (data) => {

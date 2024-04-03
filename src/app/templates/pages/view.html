@@ -4,9 +4,7 @@
     <div class="px-4">
         <div class="mx-auto container w-full">
             <div id="FileDetailsContainer" class="my-12 h-full">
-                <div class="h-full flex items-center justify-center my-12">
-                    <div class="w-10 h-10 rounded-full border border-2 border-zinc-700 border-r-white animate-spin"></div>
-                </div>
+                {% include "parts/LoadingSpinner.html" %}
             </div>
         </div>
         <script>
@@ -110,6 +108,8 @@
                                     data = data.response.song
                                     document.title = `${title_prefix} - ${data.full_title}`
                                     FileDetailsContainer.html(``);
+                                    var favicon = $("#favicon")
+                                    favicon.attr("href", data.header_image_url) 
                                     try {
                                         FileDetailsContainer.append(`{% include "parts/TrackView.html" %}`)
                                     }
