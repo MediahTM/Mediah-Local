@@ -10,8 +10,10 @@
                     <h1 class="text-3xl">${data.original_title} <span class="text-zinc-400">(${data.release_date})</span></h1>
                     <div class="flex items-center my-1 text-sm gap-2">
                         <p>Playtime ${formatTime(data.runtime)}</p>
-                        <span class="text-zinc-600">•</span>
-                        <i class="text-zinc-400">${data.tagline}</i>
+                        ${data.tagline ? `
+                            <span class="text-zinc-600">•</span>
+                            <i class="text-zinc-400">${data.tagline}</i>
+                        `: ``}
                     </div>
                 </div>
                 <div>
